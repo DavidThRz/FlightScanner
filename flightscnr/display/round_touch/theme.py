@@ -146,6 +146,8 @@ LABEL = (255, 255, 255)
 AIRCRAFT = (255, 180, 40)
 # Aegean Airlines (ICAO AEE / IATA A3) brand blue.
 AIRLINE_AEGEAN = (0, 33, 122)
+# Iberia (ICAO IBE / IATA IB) brand red.
+AIRLINE_IBERIA = (166, 28, 34)
 # Unmapped ICAO type / blank type — darker so known traffic stays punchy.
 AIRCRAFT_UNKNOWN = (150, 100, 28)
 TAG_TYPE = (255, 200, 0)

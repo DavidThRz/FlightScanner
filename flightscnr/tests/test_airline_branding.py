@@ -17,6 +17,7 @@ from utilities.airline_branding import (
     airline_icao_from_callsign,
     display_flight_id,
     is_aegean_flight,
+    is_iberia_flight,
     prefer_marketing_flight_id,
     raw_callsign_for_flight,
     resolve_logo_icao,
@@ -100,6 +101,23 @@ def test_aegean_does_not_match_registration_or_partial_identifier():
     assert not is_aegean_flight({"callsign": "AEEGEAN"})
     assert not is_aegean_flight({"flight_number": "A3TEST"})
     assert not is_aegean_flight(None)
+
+
+def test_iberia_matches_icao_iata_and_name_fields():
+    assert is_iberia_flight({"callsign": "IBE321"})
+    assert is_iberia_flight({"flight_number": "IB3170"})
+    assert is_iberia_flight({"number": "IB 6827"})
+    assert is_iberia_flight({"airline_icao": "ibe"})
+    assert is_iberia_flight({"owner_icao": "IBE"})
+    assert is_iberia_flight({"owner_iata": "ib"})
+    assert is_iberia_flight({"airline": "Iberia"})
+
+
+def test_iberia_does_not_match_registration_or_partial_identifier():
+    assert not is_iberia_flight({"registration": "IB-XYZ"})
+    assert not is_iberia_flight({"callsign": "IBERIA"})
+    assert not is_iberia_flight({"flight_number": "IBTEST"})
+    assert not is_iberia_flight(None)
 
 
 def test_display_flight_id_skywest_united():

@@ -258,6 +258,30 @@ def is_aegean_flight(flight: dict) -> bool:
     return False
 
 
+def is_iberia_flight(flight: dict) -> bool:
+    """True when live/enriched identifiers consistently identify Iberia."""
+    if not isinstance(flight, dict):
+        return False
+
+    for field in ("airline_icao", "owner_icao"):
+        if _normalize(flight.get(field) or "") == "IBE":
+            return True
+    if _normalize(flight.get("owner_iata") or "") == "IB":
+        return True
+
+    for field in ("callsign", "flight_number", "number"):
+        ident = _normalize(flight.get(field) or "").replace(" ", "")
+        if ident.startswith("IBE") and ident[3:4].isdigit():
+            return True
+        if ident.startswith("IB") and ident[2:3].isdigit():
+            return True
+
+    for field in ("airline", "airline_name"):
+        if "IBERIA" in _normalize(flight.get(field) or ""):
+            return True
+    return False
+
+
 def aircraft_tag_identity(
     flight: dict,
     *,

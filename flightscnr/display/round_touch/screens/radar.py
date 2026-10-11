@@ -1422,10 +1422,12 @@ def _draw_alert_glow(
 
 
 def _flight_icon_color(flight, *, compact: bool):
-    from utilities.airline_branding import is_aegean_flight
+    from utilities.airline_branding import is_aegean_flight, is_iberia_flight
 
     if is_aegean_flight(flight):
         return tuple(theme.AIRLINE_AEGEAN[:3])
+    if is_iberia_flight(flight):
+        return tuple(theme.AIRLINE_IBERIA[:3])
     if _is_tracked(flight) and not compact:
         return _overlay_color_for_basemap(theme.SWEEP)
     if aircraft_alert.is_highlighted(flight):
