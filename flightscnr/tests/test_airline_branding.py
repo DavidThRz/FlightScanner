@@ -16,6 +16,7 @@ from utilities.airline_branding import (
     aircraft_tag_identity,
     airline_icao_from_callsign,
     display_flight_id,
+    is_aegean_flight,
     prefer_marketing_flight_id,
     raw_callsign_for_flight,
     resolve_logo_icao,
@@ -82,6 +83,23 @@ def test_iata_callsign():
         flight_number="",
         callsign="UA353",
     ) == "UAL"
+
+
+def test_aegean_matches_icao_iata_and_name_fields():
+    assert is_aegean_flight({"callsign": "AEE123"})
+    assert is_aegean_flight({"flight_number": "A3600"})
+    assert is_aegean_flight({"number": "A3 821"})
+    assert is_aegean_flight({"airline_icao": "aee"})
+    assert is_aegean_flight({"owner_icao": "AEE"})
+    assert is_aegean_flight({"owner_iata": "a3"})
+    assert is_aegean_flight({"airline": "Aegean Airlines"})
+
+
+def test_aegean_does_not_match_registration_or_partial_identifier():
+    assert not is_aegean_flight({"registration": "A3-XYZ"})
+    assert not is_aegean_flight({"callsign": "AEEGEAN"})
+    assert not is_aegean_flight({"flight_number": "A3TEST"})
+    assert not is_aegean_flight(None)
 
 
 def test_display_flight_id_skywest_united():

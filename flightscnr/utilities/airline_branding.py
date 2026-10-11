@@ -229,6 +229,35 @@ def raw_tail_for_flight(flight: dict) -> str:
     return _normalize(flight.get("registration") or "")
 
 
+def is_aegean_flight(flight: dict) -> bool:
+    """True when live/enriched identifiers consistently identify AEGEAN.
+
+    Sources do not expose one universal airline field, so accept the ICAO code
+    AEE, the alphanumeric IATA prefix A3, or an explicit AEGEAN airline name.
+    Registrations are deliberately excluded to avoid prefix coincidences.
+    """
+    if not isinstance(flight, dict):
+        return False
+
+    for field in ("airline_icao", "owner_icao"):
+        if _normalize(flight.get(field) or "") == "AEE":
+            return True
+    if _normalize(flight.get("owner_iata") or "") == "A3":
+        return True
+
+    for field in ("callsign", "flight_number", "number"):
+        ident = _normalize(flight.get(field) or "").replace(" ", "")
+        if ident.startswith("AEE") and ident[3:4].isdigit():
+            return True
+        if ident.startswith("A3") and ident[2:3].isdigit():
+            return True
+
+    for field in ("airline", "airline_name"):
+        if "AEGEAN" in _normalize(flight.get(field) or ""):
+            return True
+    return False
+
+
 def aircraft_tag_identity(
     flight: dict,
     *,

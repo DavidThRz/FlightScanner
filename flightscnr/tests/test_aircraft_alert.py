@@ -156,6 +156,16 @@ class TestRimFlashPriority(unittest.TestCase):
 
 
 class TestEmergencyColorCollision(unittest.TestCase):
+    def test_aegean_brand_blue_overrides_tracking_alerts_and_altitude(self):
+        from display.round_touch.screens import radar
+
+        flight = {"callsign": "AEE123", "plane": "A320", "altitude": 32000}
+        with mock.patch.object(radar, "_is_tracked", return_value=True), mock.patch.object(
+            aircraft_alert, "is_highlighted", return_value=True
+        ), mock.patch.object(radar.settings, "color_by_altitude", return_value=True):
+            icon = radar._flight_icon_color(flight, compact=False)
+        self.assertEqual(icon, theme.AIRLINE_AEGEAN)
+
     def test_emergency_red_is_not_descend_tag(self):
         self.assertNotEqual(
             tuple(theme.ALERT_EMERGENCY[:3]),
