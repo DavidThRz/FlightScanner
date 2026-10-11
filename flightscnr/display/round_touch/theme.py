@@ -145,7 +145,7 @@ SWEEP_TRAIL = (12, 72, 28)
 LABEL = (255, 255, 255)
 AIRCRAFT = (255, 180, 40)
 # Aegean Airlines (ICAO AEE / IATA A3) brand blue.
-AIRLINE_AEGEAN = (0, 33, 122)
+AIRLINE_AEGEAN = (148, 170, 203)
 # Iberia (ICAO IBE / IATA IB) brand red.
 AIRLINE_IBERIA = (166, 28, 34)
 # Unmapped ICAO type / blank type — darker so known traffic stays punchy.
