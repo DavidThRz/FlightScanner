@@ -92,11 +92,12 @@ def _draw_time_block(surface, y: int) -> int:
     time_font = draw.load_font(theme.FONT_CLOCK, bold=True)
     ampm_font = draw.load_font(theme.FONT_CLOCK_AMPM, bold=True)
     time_str, ampm = _time_strings()
+    clock_text_color = (255, 255, 255)
 
     if ampm:
         gap = theme.s(8)
-        time_img = time_font.render(time_str, True, theme.SWEEP)
-        ampm_img = ampm_font.render(ampm, True, theme.SWEEP)
+        time_img = time_font.render(time_str, True, clock_text_color)
+        ampm_img = ampm_font.render(ampm, True, clock_text_color)
         total_w = time_img.get_width() + gap + ampm_img.get_width()
         x = theme.CENTER_X - total_w // 2
         time_y = y
@@ -105,7 +106,7 @@ def _draw_time_block(surface, y: int) -> int:
         surface.blit(ampm_img, (x + time_img.get_width() + gap, ampm_y))
         return max(time_y + time_img.get_height(), ampm_y + ampm_img.get_height())
 
-    rendered = time_font.render(time_str, True, theme.SWEEP)
+    rendered = time_font.render(time_str, True, clock_text_color)
     rect = rendered.get_rect(midtop=(theme.CENTER_X, y))
     surface.blit(rendered, rect)
     return rect.bottom
