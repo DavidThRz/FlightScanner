@@ -136,6 +136,7 @@ def _draw_weather_row(surface, y: int, wx, body_font, detail_font) -> int:
     if temp is None:
         return y
 
+    clock_text_color = (255, 255, 255)
     unit = wx.get("unit") or "C"
     code = wx.get("weather_code")
     if code is None:
@@ -147,11 +148,11 @@ def _draw_weather_row(surface, y: int, wx, body_font, detail_font) -> int:
 
     icon_size = _WEATHER_ICON()
     temp_line = f"{int(round(temp))}°{unit}"
-    temp_img = body_font.render(temp_line, True, theme.ROUTE)
+    temp_img = body_font.render(temp_line, True, clock_text_color)
     cond = wx.get("weather_label") or ""
     if cond == "—":
         cond = ""
-    cond_img = detail_font.render(cond, True, theme.HINT) if cond else None
+    cond_img = detail_font.render(cond, True, clock_text_color) if cond else None
 
     text_h = temp_img.get_height()
     if cond_img:
@@ -182,6 +183,7 @@ def _draw_weather_row(surface, y: int, wx, body_font, detail_font) -> int:
 
 
 def _draw_sun_row(surface, y: int, wx, detail_font) -> int:
+    clock_text_color = (255, 255, 255)
     sunrise = _format_sun_time(wx.get("sunrise"))
     sunset = _format_sun_time(wx.get("sunset"))
     if sunrise == "—" and sunset == "—":
@@ -197,7 +199,7 @@ def _draw_sun_row(surface, y: int, wx, detail_font) -> int:
             sunrise,
             sunset=False,
             font=detail_font,
-            color=theme.HINT,
+            color=clock_text_color,
         )
     if sunset != "—":
         weather_icons.draw_sun_group(
@@ -207,7 +209,7 @@ def _draw_sun_row(surface, y: int, wx, detail_font) -> int:
             sunset,
             sunset=True,
             font=detail_font,
-            color=theme.HINT,
+            color=clock_text_color,
         )
     return y + row_h + _LINE_GAP()
 
@@ -216,6 +218,7 @@ def _draw_moon_row(surface, y: int, detail_font) -> int:
     """Moonrise/moonset under the sun row, same layout, vector moon glyphs."""
     from display.round_touch.screens import moon
 
+    clock_text_color = (255, 255, 255)
     try:
         data = moon.get_moon_data()
         rise = moon.format_event_time(data.get("moonrise"))
@@ -237,7 +240,7 @@ def _draw_moon_row(surface, y: int, detail_font) -> int:
     ):
         if time_str == "—":
             continue
-        text = detail_font.render(time_str, True, theme.HINT)
+        text = detail_font.render(time_str, True, clock_text_color)
         gap = theme.s(4)
         total_w = icon_size + gap + text.get_width()
         left = center_x - total_w // 2
@@ -283,6 +286,7 @@ def tap_on_time(x: int, y: int) -> bool:
 
 
 def draw_clock(surface):
+    clock_text_color = (255, 255, 255)
     draw.fill_background_textured(surface)
 
     wx = weather_data.refresh() or weather_data.snapshot()
@@ -295,7 +299,7 @@ def draw_clock(surface):
     y = _clock_start_y()
     y = _draw_time_block(surface, y)
     y += _AFTER_TIME()
-    y = _center_line(surface, y, date_str, body_font, theme.LABEL)
+    y = _center_line(surface, y, date_str, body_font, clock_text_color)
 
     if wx and wx.get("ready") and wx.get("temp") is not None and y < limit_y:
         y += _SECTION_GAP()
@@ -307,4 +311,4 @@ def draw_clock(surface):
             y = _draw_moon_row(surface, y, detail_font)
 
     nav.draw_footer_buttons(surface, list(FOOTER_BUTTONS))
-    weather_icons.draw_attribution(surface)
+    weather_icons.draw_attribution(surface, color=clock_text_color)
