@@ -736,7 +736,8 @@ _tag_overlap_area = label_layout.overlap_area
 
 def _tag_leader_color(text_rgb: tuple[int, int, int]) -> tuple[int, int, int]:
     """Use the blip color at full strength — dimmed grid-green disappears on the map."""
-    return (int(text_rgb[0]), int(text_rgb[1]), int(text_rgb[2]))
+    WHITE_TAG_LEADER = (255, 255, 255)
+    return WHITE_TAG_LEADER
 
 
 def _icon_rim_toward(x: int, y: int, tx: int, ty: int) -> tuple[int, int]:
